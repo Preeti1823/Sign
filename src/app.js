@@ -3,7 +3,7 @@ const path = require("path");
 const app = express();
 const hbs = require("hbs");
 require("./db/conn");
-const Register = require("./models/user");
+const Register = require("./models/register");
 
 const port = process.env.PORT || 3000;
 
@@ -23,34 +23,38 @@ app.get("/", (req,res) =>{
     res.render("index")
 
 });
+//register
+app.get("/register", (req,res) =>{
 
-app.get("/index", (req,res) =>{
+    res.render("register")
 
-    res.render("index")
+})
 
-});
+app.get("/login",(req,res)=> {
+    res.render("login");
+})
 //create a new user in our database:
 
-app.post("/index", async(req,res) =>{
+app.post("/register", async(req,res) =>{
 
     try{
 
-        //console.log(req.body.Name);
-        //res.send(req.body.Name);
+        //console.log(req.body.name);
+        //res.send(req.body.name);
 
-        const pass1 = req.body.Password;
-        const confirm_pass = req.body.Confrim_Password;
+        const password = req.body.password;
+        const confirm_password = req.body.confirm_password;
 
-        if(pass1 == confirm_pass){
+        if(password === confirm_password){
             const registerEmployee = new Register({
-                Name: req.body.Name,
-                Email : req.body.Email,
-                Password: req.body.Password,
-                Confrim_Password : req.body.Confrim_Password
+                name : req.body.name,
+                email : req.body.email,
+                password: req.body.password,
+                confirm_password : req.body.confirm_password
             })
 
          const registered = await registerEmployee.save();
-        res.status(201).render(index);
+         res.status(201).render("index");
 
         }else{
             res.send("password do not match");
@@ -60,7 +64,31 @@ app.post("/index", async(req,res) =>{
         res.status(400).send(error);
     }
 
-});
+})
+
+//login check
+app.post("/login",async(req,res)=>{
+    try {
+
+        const email = req.body.email;
+        const password = req.body.password;
+
+      const useremail =  await Register.findOne({email:email});
+      //res.send(useremail.password);
+      //console.log(useremail.password);
+      if(useremail.password === password){
+          res.status(201).render("index");
+      }
+      else{
+          res.send("password does not matched")
+      }
+
+        //console.log(`${email} and password is ${password}`)
+        
+    } catch (error) {
+        res.status(400).send("Invalid login details")
+    }
+})
 
 
 app.listen(port , () =>{

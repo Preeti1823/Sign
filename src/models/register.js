@@ -1,19 +1,19 @@
 const mongoose = require("mongoose")
 const employeeSchema = new mongoose.Schema({
-    Name: {
+    name: {
         type:String,
         required : true
     },
-    Email: {
+    email: {
         type: String,
         required : true,
         unique: true
     },
-    Password: {
+    password: {
         type : String,
         required : true
     },
-    Confirm_Password:{
+    confirm_password:{
         type : String,
         required : true
     }
