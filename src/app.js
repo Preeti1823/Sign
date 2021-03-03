@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const hbs = require("hbs");
+const bcrypt = require("bcrypt");
 require("./db/conn");
 const Register = require("./models/register");
 
@@ -53,6 +54,7 @@ app.post("/register", async(req,res) =>{
                 confirm_password : req.body.confirm_password
             })
 
+//return call after hashing
          const registered = await registerEmployee.save();
          res.status(201).render("index");
 
@@ -74,6 +76,10 @@ app.post("/login",async(req,res)=>{
         const password = req.body.password;
 
       const useremail =  await Register.findOne({email:email});
+
+      //const isMatch = await bcrypt.compare(password, useremail.password);
+      //console.log(ismatch);
+
       //res.send(useremail.password);
       //console.log(useremail.password);
       if(useremail.password === password){
@@ -89,6 +95,28 @@ app.post("/login",async(req,res)=>{
         res.status(400).send("Invalid login details")
     }
 })
+
+//hashing basic
+
+
+//const securePassword = async(password) =>{
+
+//creating hash
+    //const hashPassword = await bcrypt.hash(password, 10);
+    //console.log(hashPassword);
+//matching generated hash key with password
+    //const matchPassword = await bcrypt.compare(password,hashPassword);
+    //const matchPassword = await bcrypt.compare("abc",hashPassword);
+    //const matchPassword = await bcrypt.compare(password,"$2b$10$LWUUVFibbFzDxSVJccZi5uqzXCtzHbsVdrcpHkbnj6KCUSG4XIvyO");
+    //const matchPassword = await bcrypt.compare("preti","$2b$10$LWUUVFibbFzDxSVJccZi5uqzXCtzHbsVdrcpHkbnj6KCUSG4XIvyO");
+
+
+    //console.log(matchPassword);
+//}
+
+//securePassword("Preeti");
+
+//hashing basic end
 
 
 app.listen(port , () =>{
