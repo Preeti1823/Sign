@@ -36,6 +36,28 @@ app.get("/login",(req,res)=> {
 })
 //create a new user in our database:
 
+async function encryption(password,key1){
+console.log("passs:::",password,"key::::",key1)
+    let hashedPass ;
+    let key = key1;
+        //const hashPassword = await bcrypt.hash(password,10);
+        //console.log(`the current password is ${this.password}`);
+       try {
+        hashedPass = await bcrypt.hashSync(password,10);
+         console.log("hashedPass::::::::::::::::::::::::",hashedPass)    
+        } catch (error) {
+         console.log("errrr::::;",error)
+      }
+        
+        //console.log(`the current password is ${this.password}`);
+        
+
+        //return {hash:hashedPass,key:10}}
+
+
+    //login
+
+
 app.post("/register", async(req,res) =>{
 
     try{
@@ -46,17 +68,26 @@ app.post("/register", async(req,res) =>{
         const password = req.body.password;
         const confirm_password = req.body.confirm_password;
 
+        //encrypt 
+
+
+
         if(password === confirm_password){
+            
+            let {hash,key} = await encryption(password,10)
             const registerEmployee = new Register({
                 name : req.body.name,
                 email : req.body.email,
-                password: req.body.password,
-                confirm_password : req.body.confirm_password
+                password :req.body.password,
+                confirm_password : req.body.password
+                //key:key
             })
 
+       var resp = await Register.create(registerEmployee);
+       //const registered = await registerEmployee.save();
 //return call after hashing
-         const registered = await registerEmployee.save();
-         res.status(201).render("index");
+//await Register.insert(registerEmployee);
+        res.status(200).send(resp);
 
         }else{
             res.send("password do not match");

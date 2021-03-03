@@ -14,25 +14,26 @@ const employeeSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    confirm_password:{
+    confirm_password :{
         type : String,
         required : true
     }
 })
 
-employeeSchema.pre("save", async function(next){
+//employeeSchema.pre("create",async function(next){
+  //  if(this.ismodified("password")){
+    //    this.password = await bcrypt.hash(this.password,10);
+      //  this.confirm_password = undefined;
+      //console.log(`${this.password}`)
 
-    if(this.isModified("password")){
-        //const hashPassword = await bcrypt.hash(password,10);
-        console.log(`the current password is ${this.password}`);
-        this.password = await bcrypt.hash(this.password,10);
-        console.log(`the current password is ${this.password}`);
-        this.confirm_password = undefined;
+    //}
 
-    }
-    next();
-})
+    //next();
+//})
+
+
+
 
 //create a collection
  const Register = new mongoose.model("Register",employeeSchema);
- module.exports = Register;
+ module.exports = Register; 
